@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Masjid</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Faster+One&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Irish+Grover&family=Itim&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=M+PLUS+Code+Latin:wght@100..700&family=Mochiy+Pop+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playwrite+AR:wght@100..400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rosario:ital,wght@0,700;1,700&family=Seymour+One&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{{ asset('assets/css/landingpage.css')}}">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 </head>
 
 <body class="bg-gray-100 text-gray-800">
@@ -77,6 +85,7 @@
                         </li>
                     </ul>
                 </div>
+
                 <div class="mt-auto">
                     <p class="my-4 text-xs text-center text-gray-400">
                         <span>Copyright © 2024</span>
@@ -86,25 +95,78 @@
         </div>
     </body>
 
-    <!-- Hero Section -->
-    <section id="home" class="relative bg-cover bg-center h-screen flex items-center justify-left">
-        <div class="absolute inset-0">
-            <div
-                class="h-full w-full bg-cover bg-center opacity-50 blur"
-                style="background-image: url('{{ asset('assets/images/masjid.jpeg') }}');">
+
+    <!-- hero section -->
+
+    <section id="home" class="relative bg-cover bg-center min-h-screen flex items-center justify-center pt-16 md:pt-20">
+        <!-- Background -->
+        <div class="absolute inset-0 px-4 sm:px-10 md:px-20 pb-16 sm:pb-20 md:pb-28 pt-4 sm:pt-5 rounded-lg bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50">
+            <div class="h-full w-full bg-cover bg-center rounded-lg"
+                style="background-image: url('{{ asset('assets/images/masjid2.png') }}');">
             </div>
         </div>
 
         <!-- Konten -->
-        <div class="relative z-10 text-black p-6">
+        <div class="relative z-10 text-white p-6 w-full max-w-4xl">
             @foreach ($Hero as $hero)
-            <h1 class="text-4xl font-bold mb-4">{{ $hero->judul }}</h1>
-            <p class="mt-4 text-lg">{{ $hero->isi }}</p>
+            <h1 class="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 -mt-10 text-center" style="font-family: 'M PLUS Code Latin', sans-serif;">
+                {{ $hero->judul }}
+            </h1>
+            <p class="mt-4 text-sm sm:text-base md:text-lg text-center leading-relaxed font-mono">
+                {{ $hero->isi }}
+            </p>
             @endforeach
-            <a href="#donasi" class="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-white-700">Donasi Sekarang</a>
-        </div>
 
+            <!-- Tombol Donasi -->
+            <div class="text-center mt-6">
+                <a href="#donasi"
+                    class="px-5 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:bg-blue-600 hover:text-white transition duration-300">
+                    Donasi Sekarang
+                </a>
+            </div>
+
+            <div class="flex items-center justify-center mt-10 h-30 w-full">
+                <div class="text-center">
+
+                    <p id="ayah-text" class="text-3xl font-bold text-black mb-4"></p>
+
+                    <p id="ayah-translation" class="text-lg italic text-black mb-2"></p>
+
+                    <p id="ayah-info" class="text-sm text-black font-medium"></p>
+                </div>
+            </div>
+
+            <!-- Waktu Salat -->
+            <div id="waktuShalat" class="waktu-shalat grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-10 md:mt-20"></div>
+
+        </div>
     </section>
+    <!-- akhir hero section -->
+
+    <!-- countdown 1 ramadhan -->
+
+    <div id="countdown" class="mt-8 text-center text-blue-600 bg-gradient-to-r bg-white p-2 rounded-lg shadow-lg">
+        <h2 class="text-2xl md:text-3xl font-bold">MENUJU RAMADHAN</h2>
+        <div class="flex justify-center space-x-4 mt-4">
+            <div class="text-center">
+                <span id="days" class="block text-4xl md:text-2xl font-bold"></span>
+                <span class="text-sm md:text-lg">Days</span>
+            </div>
+            <div class="text-center">
+                <span id="hours" class="block text-4xl md:text-2xl font-bold"></span>
+                <span class="text-sm md:text-lg">Hours</span>
+            </div>
+            <div class="text-center">
+                <span id="minutes" class="block text-4xl md:text-2xl font-bold"></span>
+                <span class="text-sm md:text-lg">Minutes</span>
+            </div>
+            <div class="text-center">
+                <span id="seconds" class="block text-4xl md:text-2xl font-bold"></span>
+                <span class="text-sm md:text-lg">Seconds</span>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Slider Donasi -->
     <section id="donasi" class="py-16 bg-white"
@@ -113,134 +175,358 @@
                 background-repeat: no-repeat; 
                 background-position: right ;">
         <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-8">Program Donasi</h2>
+            <h2 class="text-4xl font-extrabold mb-4 text-transparent text-center bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500 h-20">Program Donasi</h2>
 
-            <div class="flex overflow-x-auto space-x-4 p-8">
+            <div class="flex overflow-x-auto space-x-4 p-8  ">
                 @foreach ($donasis as $donasi)
-                <div class="bg-blue-400 p-4 rounded-lg shadow-xl w-64 flex-shrink-0 ">
-                    <div><img class="w-full h-32 object-cover rounded-lg" src="{{$donasi->path}}" alt=""></div>
-                    <h3 class="font-bold text-xl mb-2">{{ $donasi->judul }}</h3>
-                    <p class="text-sm mb-4">{{ $donasi->isi }}</p>
-                    <button class="donateButton px-4 py-2 bg-blue-600 text-white rounded"
+                <div class="bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-lg shadow-2xl w-72 flex-shrink-0 transform hover:scale-105 transition duration-300">
+                    <!-- Gambar -->
+                    <div class="relative">
+                        <img class="w-full h-40 object-cover rounded-lg shadow-lg" src="{{$donasi->path}}" alt="Image">
+                        <div class="absolute inset-0 bg-black bg-opacity-20 rounded-lg"></div>
+                    </div>
+                    <!-- Judul -->
+                    <h3 class="font-bold text-white text-lg mt-4 mb-2 truncate">
+                        {{ $donasi->judul }}
+                    </h3>
+                    <!-- Isi -->
+                    <p class="text-sm text-gray-100 mb-4 line-clamp-3">
+                        {{ $donasi->isi }}
+                    </p>
+                    <!-- Tombol -->
+                    <button class="donateButton px-5 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:bg-blue-600 hover:text-white transition duration-300"
                         data-id="{{ $donasi->id }}"
                         data-judul="{{ $donasi->judul }}"
                         data-isi="{{ $donasi->isi }}"
                         data-path="{{ $donasi->path }}">
-
                         Donasi
                     </button>
                 </div>
                 @endforeach
             </div>
+
         </div>
     </section>
 
-    <!-- Informasi Keislaman -->
-    <section id="informasi" class="py-16 bg-gray-100">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-8">Informasi Keislaman</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ($contents as $content)
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h3 class="font-bold text-xl mb-2">{{ $content->judul }}</h3>
-                    <p>{{ $content->isi }}</p>
+    <!-- Informasi Keislaman dan Berita/Acara -->
+    <section id="informasi" class="py-16 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Kolom Informasi Keislaman -->
+                <div>
+                    <h2 class="text-4xl font-extrabold text-blue-700 mb-8 text-center lg:text-left">
+                        Informasi Keislaman
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        @foreach ($contents as $content)
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                            <h3 class="font-bold text-xl text-blue-600 mb-3">
+                                {{ $content->judul }}
+                            </h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                {{ $content->isi }}
+                            </p>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
-                @endforeach
+
+                <!-- Kolom Berita/Acara dengan Slider -->
+                <div class="space-y-8">
+                    <h2 class="text-4xl font-extrabold text-blue-700 mb-8 text-center lg:text-left">
+                        Berita & Acara
+                    </h2>
+                    <div class="swiper-container relative overflow-hidden w-full max-w-full">
+                        <div class="swiper-wrapper">
+                            @foreach ($events as $event)
+
+                            <div class="swiper-slide bg-white rounded-xl shadow-lg overflow-hidden max-w-full">
+                                <img src="{{ asset('storage/' . $event->path) }}" alt="{{ $event->judul }}" class="w-full h-full object-cover">
+                            </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Navigasi Slider -->
+                        <div class="swiper-button-next absolute top-1/2 right-0 transform -translate-y-1/2 z-10"></div>
+                        <div class="swiper-button-prev absolute top-1/2 left-0 transform -translate-y-1/2 z-10"></div>
+
+                        <!-- Pagination -->
+                        <div class="swiper-pagination absolute bottom-0 w-full z-10"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Tentang Masjid -->
-    <section id="tentang" class="py-16 bg-white">
+    <section id="tentang" class="py-16 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50">
         @foreach ($tentangs as $tentang)
-        <div class="container mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-6">{{ $tentang->judul }}</h2>
-            <p class="text-lg leading-relaxed">{{ $tentang->isi }}</p>
+        <div class="container mx-auto px-6 md:px-16 text-center mb-12">
+            <h2 class="text-4xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500 h-20">
+                {{ $tentang->judul }}
+            </h2>
+            <p class="text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto">
+                {{ $tentang->isi }}
+            </p>
+
         </div>
         @endforeach
     </section>
 
+
     <!-- Pop-Up Modal -->
-    <div id="donationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-20">
-        <div class="bg-white w-96 rounded-lg shadow-lg p-6 fade-in">
+    <div id="donationModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-20">
+        <div class="bg-gradient-to-br from-white via-gray-50 to-blue-50 w-96 rounded-xl shadow-2xl p-6 relative">
             <!-- Close Button -->
-            <button id="closeButton" class="text-gray-500 hover:text-gray-800 float-right">&times;</button>
+            <button id="closeButton" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl">&times;</button>
 
             <!-- Content -->
-
-            <div class="text-center slide-down mt-30">
-                <img src="{{ $donasi->path }}" alt="Donation" class="w-32 h-full object-cover mx-auto mb-4 rounded-lg">
-                <h2 class="text-xl font-bold mb-2">Terima kasih karena telah mendonasikan ke {{ $donasi->judul }}</h2>
-                <p class="text-gray-600 mb-4">{{ $donasi->isi }}</p>
+            <div class="text-center mt-6">
+                <img src="{{ $donasi->path }}" alt="Donation" class="w-32 h-32 object-cover mx-auto mb-4 rounded-full border-4 border-blue-400 shadow-md">
+                <h2 class="text-2xl font-extrabold text-blue-600 mb-2">
+                    Terima kasih telah mendonasikan ke {{ $donasi->judul }}
+                </h2>
+                <p class="text-gray-700 mb-6">{{ $donasi->isi }}</p>
 
                 <!-- Dropdown Metode Pembayaran -->
-                <select id="paymentMethod" class="w-full border-blue-300 rounded-lg p-2 mb-4">
-                    <option value="">Pilih Metode</option>
+                <select id="paymentMethod" class="w-full border border-blue-300 rounded-lg p-2 mb-4 bg-blue-50 text-gray-800">
+                    <option value="" class="text-gray-400">Pilih Metode</option>
                     <option value="bank">Transfer ATM</option>
-                    @foreach ($donasi->emoney as $emoney)
-                    <option value="{{ $emoney['key'] }}">{{ $emoney['nama'] }}</option>
-                    @endforeach
-                    @if ($donasi->qris_path)
+                    <option value="emoney">Pilih e-money</option>
                     <option value="qris">QRIS</option>
-                    @endif
                 </select>
 
                 <!-- Dropdown Bank (Hanya untuk Transfer ATM) -->
                 <div id="bankDropdown" class="hidden fade-in">
-                    <select id="bankListNames" class="w-full border-gray-300 rounded-lg p-2 mb-4">
-                        <option value="">Pilih Bank</option>
-                        @foreach ($donasi->bank as $bank)
-                        <option value="{{ $bank['key'] }}">{{ $bank['nama'] }}</option>
-                        @endforeach
+                    <select id="bankListNames" class="w-full border border-gray-300 rounded-lg p-2 mb-4 bg-gray-50 text-gray-800">
+                        <option value="" id="pilih_bank" class="text-gray-400">Pilih Bank</option>
                     </select>
                 </div>
 
-                <select id="bankListAccounts" class="hidden">
-                    @if($donasi->no_rek_1)
-                    <option value="ATM1" data-rekening="{{ $donasi->no_rek_1 }}">{{ $donasi->no_rek_1 }}</option>
-                    @endif
-                    @if($donasi->no_rek_2)
-                    <option value="ATM2" data-rekening="{{ $donasi->no_rek_2 }}">{{ $donasi->no_rek_2 }}</option>
-                    @endif
-                    @if($donasi->no_rek_3)
-                    <option value="ATM3" data-rekening="{{ $donasi->no_rek_3 }}">{{ $donasi->no_rek_3 }}</option>
-                    @endif
-                </select>
+                <!-- Dropdown e-Money -->
+                <div id="emoneyDropdown" class="hidden fade-in">
+                    <select id="emoneyListNames" class="w-full border border-gray-300 rounded-lg p-2 mb-4 bg-gray-50 text-gray-800">
+                        <option value="" id="pilih_emoney" class="text-gray-400">Pilih e-Money</option>
+                    </select>
+                </div>
 
                 <!-- Payment Info -->
                 <div id="paymentInfo" class="text-left hidden fade-in">
                     <p class="text-sm text-gray-600">Nomor Rekening/VA:</p>
                     <div class="flex items-center mt-1">
-                        <span id="paymentDetails" class="font-mono text-gray-800"></span>
+                        <span id="paymentDetails" class="font-mono text-lg font-semibold text-gray-800"></span>
                         <button type="button" class="ml-2 text-blue-600 hover:text-blue-800" onclick="copyContent()">Copy</button>
                     </div>
                 </div>
 
                 <!-- QRIS -->
-                <div id="qrisInfo" class="hidden fade-in">
+                <div id="qrisInfo" class="hidden fade-in mt-6">
                     <p class="text-sm text-gray-600 mb-2">Scan QRIS:</p>
-                    <img src="{{ $donasi->qris_path }}" alt="QRIS" class="w-32 h-32 mx-auto">
+                    <img src="{{ $donasi->qris_path }}" alt="QRIS" class="w-40 h-40 mx-auto rounded-lg shadow-lg">
                 </div>
-
             </div>
-
         </div>
     </div>
 
+
     <!-- Footer -->
-    <footer class="bg-blue-600 text-white py-8">
+    <footer class="bg-gradient-to-r from-blue-600 to-green-500 text-white py-8 rounded-t-lg">
         @foreach($kontaks as $kontak)
-        <div class="container mx-auto text-center">
-            <p>&copy;{{ $kontak->tahun }} Masjid Al-Kautsar. Semua Hak Dilindungi.</p>
-            <p>Kontak: {{ $kontak->email }} | {{ $kontak->no_telpon }}</p>
+        <div class="container mx-auto text-center space-y-4">
+            <!-- Nama Masjid -->
+            <div class="flex justify-center items-center">
+                <h2 class="text-2xl font-bold tracking-wider">Masjid Al-Kautsar</h2>
+            </div>
+
+            <!-- Informasi Hak Cipta -->
+            <p class="text-lg">&copy;{{ $kontak->tahun }} Masjid Al-Kautsar. Semua Hak Dilindungi.</p>
+            <p class="text-base">Kontak:
+                <span class="">{{ $kontak->email }}</span> |
+                <span class="font-semibold">{{ $kontak->no_telpon }}</span>
+            </p>
+
+            <!-- Lokasi Masjid -->
+            <div class="bg-white text-black rounded-lg p-4 shadow-lg inline-block">
+                <div class="flex flex-col items-center space-y-3">
+
+                    <!-- Teks Lokasi -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-center">Lokasi Masjid</h3>
+                        <p class="text-sm text-gray-700 text-center">Jl. Karawitan No.86, Kota Bandung, Jawa Barat </p>
+                    </div>
+                    <!-- Tombol Lokasi -->
+                    <a href="https://goo.gl/maps/example" target="_blank" class="bg-gradient-to-r from-blue-600 to-green-500 hover:from-green-500 hover:to-blue-600 text-white px-6 py-2 rounded-lg shadow-md font-medium transition">
+                        Lihat di Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ikon Media Sosial -->
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-100 hover:text-yellow-300 transition">
+                    <i class="fab fa-facebook fa-lg"></i>
+                </a>
+                <a href="#" class="text-gray-100 hover:text-pink-300 transition">
+                    <i class="fab fa-instagram fa-lg"></i>
+                </a>
+                <a href="#" class="text-gray-100 hover:text-blue-300 transition">
+                    <i class="fab fa-twitter fa-lg"></i>
+                </a>
+                <a href="#" class="text-gray-100 hover:text-red-300 transition">
+                    <i class="fab fa-youtube fa-lg"></i>
+                </a>
+            </div>
         </div>
         @endforeach
     </footer>
 
-
-
     <script>
-        var donasi_id = null
+        //slider berita atau acara
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const swiper = new Swiper('.swiper-container', {
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                slidesPerView: 1,
+                spaceBetween: 20,
+            });
+        });
+
+        //akhir slider berita atau acara
+
+
+        // hadist dan ayat quran
+
+        async function fetchShortAyah() {
+            let ayah = null;
+
+            while (!ayah) {
+                // Memilih surah acak
+                const randomSurah = Math.floor(Math.random() * 114) + 1;
+                const response = await fetch(`https://equran.id/api/surat/${randomSurah}`);
+                const data = await response.json();
+
+
+                const shortAyat = data.ayat.filter((a) => a.ar.length <= 50);
+
+                if (shortAyat.length > 0) {
+                    // Pilih ayat pendek secara acak
+                    const randomIndex = Math.floor(Math.random() * shortAyat.length);
+                    const selectedAyah = shortAyat[randomIndex];
+
+                    ayah = {
+                        text: selectedAyah.ar,
+                        translation: selectedAyah.idn,
+                        surah: data.nama,
+                        number: selectedAyah.nomor,
+                        surahNumber: data.nomor,
+                    };
+                }
+            }
+
+            return ayah;
+        }
+
+        async function displayShortAyah() {
+            const ayahText = document.getElementById("ayah-text");
+            const ayahTranslation = document.getElementById("ayah-translation");
+            const ayahInfo = document.getElementById("ayah-info");
+
+            // Ambil ayat pendek utuh
+            const ayah = await fetchShortAyah();
+
+            // Tampilkan ayat ke elemen HTML
+            ayahText.innerText = ayah.text; // Ayat Arab
+            ayahTranslation.innerText = `“${ayah.translation}”`; // Terjemahan
+            ayahInfo.innerText = `QS. ${ayah.surahNumber} (${ayah.surah}):${ayah.number}`; // Informasi surat dan ayat
+        }
+
+        displayShortAyah();
+        // akhir hadist dan ayat quran
+
+
+
+        // script countdown ramadhan
+
+
+        const ramadhanStartDate = new Date('2025-03-10T00:00:00'); // Ganti sesuai tanggal awal Ramadhan
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeLeft = ramadhanStartDate - now;
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+            const seconds = Math.floor((timeLeft / 1000) % 60);
+
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+
+        // Perbarui countdown setiap detik
+        setInterval(updateCountdown, 1000);
+
+        // akhir script countdown ramadhan
+
+
+
+        const API_URL = "https://api.aladhan.com/v1/timingsByCity?city=Bandung&country=Indonesia&method=2";
+        const waktuShalatContainer = document.getElementById("waktuShalat");
+
+        const colors = {
+            Fajr: "bg-white text-blue-800",
+            Dhuhr: "bg-white text-green-800",
+            Asr: "bg-white text-yellow-800",
+            Maghrib: "bg-white text-orange-800",
+            Isha: "bg-white text-purple-800"
+        };
+
+        const icons = {
+            Fajr: "<i class='bi bi-sunrise'></i>",
+            Dhuhr: "<i class='fas fa-sun'></i>",
+            Asr: "<i class='fas fa-cloud-sun'></i>",
+            Maghrib: "<i class='bi bi-sunset'></i>",
+            Isha: "<i class='fas fa-moon'></i>"
+        };
+        // Fetch and display prayer times
+        fetch(API_URL)
+            .then(response => response.json())
+            .then(data => {
+                const timings = data.data.timings;
+                for (const [waktu, jam] of Object.entries(timings)) {
+                    if (colors[waktu]) {
+                        const card = document.createElement("div");
+                        card.className = `waktu flex items-center gap-4 p-4 rounded-lg shadow-lg ${colors[waktu]}`;
+                        card.innerHTML = `
+                    <div class="icon text-3xl">${icons[waktu]}</div>
+                    <div>
+                        <h2 class="text-xl font-bold">${waktu}</h2>
+                        <p class="text-2xl">${jam}</p>
+                    </div>
+                `;
+                        waktuShalatContainer.appendChild(card);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching prayer times:", error);
+            });
+
+
+        // var donasi_id = null
 
         // Burger menus
         document.addEventListener('DOMContentLoaded', function() {
@@ -285,6 +571,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             const bankDropdown = document.getElementById('bankDropdown');
             const bankListNames = document.getElementById('bankListNames');
+            const emoneyListNames = document.getElementById('emoneyListNames');
+            const emoneyDropdown = document.getElementById('emoneyDropdown');
+            const qrisDropdown = document.getElementById('qrisDropdown');
+            const qrisListNames = document.getElementById('qrisListNames');
             const bankListAccounts = document.getElementById('bankListAccounts');
             const donateButtons = document.querySelectorAll('.donateButton');
             const donationModal = document.getElementById('donationModal');
@@ -326,24 +616,73 @@
             // Update Payment Info
 
 
-            function getPaymentMethod() {
-                var xhr = new XMLHttpRequest();
-                var url = "{{route('select-payment-method')}}";
+            function getPaymentMethod(method) {
+                const data = [];
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('select-payment-method') }}",
+                    data: {
+                        id: donasi_id
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        const data = response;
 
-                var data = JSON.stringify({
-                    id: donasi_id,
-                    
+                        if (method === 'bank') {
+                            emoneyDropdown.classList.add('hidden');
+                            bankDropdown.classList.remove('hidden');
+                            $('#bankListNames').html(
+                                '<option value="" id="pilih_bank">Pilih Bank</option>' +
+                                '<option value="' + data.no_rek_1 + '">' + data.nama_atm_1 + '</option>' +
+                                '<option value="' + data.no_rek_2 + '">' + data.nama_atm_2 + '</option>' +
+                                '<option value="' + data.no_rek_3 + '">' + data.nama_atm_3 + '</option>'
+                            )
+
+                            $('#bankListNames').change(() => {
+                                paymentInfo.classList.remove('hidden');
+                                paymentDetails.textContent = $('#bankListNames').find(":selected").val();
+                            })
+                        }
+
+                        if (method === 'emoney') {
+
+                            emoneyDropdown.classList.remove('hidden');
+                            bankDropdown.classList.add('hidden');
+                            $('#emoneyListNames').html(
+                                '<option value="" id="pilih_emoney">Pilih emoney</option>' +
+                                '<option value="' + data.nomer_va_1 + '">' + data.emoney_1 + '</option>' +
+                                '<option value="' + data.nomer_va_2 + '">' + data.emoney_2 + '</option>' +
+                                '<option value="' + data.nomer_va_3 + '">' + data.emoney_3 + '</option>'
+                            );
+
+                            $('#emoneyListNames').change(() => {
+                                paymentInfo.classList.remove('hidden');
+                                paymentDetails.textContent = $('#emoneyListNames').find(":selected").val();
+                            })
+
+
+                        }
+
+                        if (method === 'qris') {
+
+                            emoneyDropdown.classList.add('hidden');
+                            qrisDropdown.classList.remove('hidden');
+                            qrisInfo.classList.remove('hidden');
+                            emoneyDropdown.classList.add('hidden');
+                            $('#qrisListNames').html(
+                                '<option value="" id="pilih_qris">Pilih QRIS</option>' +
+                                '<option value="' + response.qris_path + '">QRIS</option>'
+                            );
+
+                            $('#qrisListNames').change(() => {
+                                qrisInfo.classList.remove('hidden');
+                                document.querySelector('#qrisInfo img').src = $('#qrisListNames').find(":selected").val();
+                            });
+
+                        }
+                    },
                 });
-
-                xhr.open("GET", url, true);
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                xhr.onload = function() {
-                    console.log(this.responseText);
-                    alert(this.responseText);
-                };
-
-                xhr.send(data);
-                return false;
+                return data;
             }
 
             function resetPaymentSections() {
@@ -355,12 +694,16 @@
 
             paymentMethod.addEventListener('change', (e) => {
                 const method = e.target.value;
-                alert(donasi_id)
                 resetPaymentSections();
 
-                getPaymentMethod();
+                const data = getPaymentMethod(method);
                 // if (method === 'bank') {
+
                 //     bankDropdown.classList.remove('hidden');
+                //     $('#bankListNames').html(
+                //         '<option value="" id="pilih_bank">Pilih Bank</option>' +
+                //         '<option value="" id="pilih_bank">Pilih Bank</option>'
+                //     );
                 // } else if (method.startsWith('Emoney')) {
                 //     paymentInfo.classList.remove('hidden');
                 //     const emoneyData = {
@@ -377,28 +720,29 @@
             });
 
             // Event listener untuk dropdown nama ATM
-            bankListNames.addEventListener('change', function() {
-                // Ambil nilai yang dipilih (ATM1, ATM2, atau ATM3)
-                const selectedValue = bankListNames.value;
+            // bankListNames.addEventListener('change', function() {
+            //     alert('test');
+            //     // Ambil nilai yang dipilih (ATM1, ATM2, atau ATM3)
+            //     const selectedValue = bankListNames.value;
 
-                // Cari opsi yang sesuai di bankListAccounts
-                const selectedAccountOption = Array.from(bankListAccounts.options).find(option => option.value === selectedValue);
+            //     // Cari opsi yang sesuai di bankListAccounts
+            //     const selectedAccountOption = Array.from(bankListAccounts.options).find(option => option.value === selectedValue);
 
-                if (selectedAccountOption) {
-                    // Ambil nomor rekening dari atribut data-rekening
-                    const rekeningNumber = selectedAccountOption.getAttribute('data-rekening');
+            //     if (selectedAccountOption) {
+            //         // Ambil nomor rekening dari atribut data-rekening
+            //         const rekeningNumber = selectedAccountOption.getAttribute('data-rekening');
 
-                    // Tampilkan nomor rekening di paymentDetails
-                    paymentDetails.textContent = rekeningNumber;
+            //         // Tampilkan nomor rekening di paymentDetails
+            //         paymentDetails.textContent = rekeningNumber;
 
-                    // Tampilkan elemen paymentInfo
-                    paymentInfo.classList.remove('hidden');
-                } else {
-                    // Jika tidak ada yang dipilih, sembunyikan paymentInfo
-                    paymentInfo.classList.add('hidden');
-                    paymentDetails.textContent = '';
-                }
-            });
+            //         // Tampilkan elemen paymentInfo
+            //         paymentInfo.classList.remove('hidden');
+            //     } else {
+            //         // Jika tidak ada yang dipilih, sembunyikan paymentInfo
+            //         paymentInfo.classList.add('hidden');
+            //         paymentDetails.textContent = '';
+            //     }
+            // });
 
             // Fungsi untuk menyalin konten
             window.copyContent = function() {

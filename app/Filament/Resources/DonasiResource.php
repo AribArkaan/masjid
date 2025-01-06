@@ -11,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 
 class DonasiResource extends Resource
 {
@@ -62,6 +61,7 @@ class DonasiResource extends Resource
                 TextColumn::make('judul')->label('Judul'),
                 TextColumn::make('isi')->label('Isi'),
                 ImageColumn::make('path')->label('Gambar'),
+                ImageColumn::make('qris_path')->label('Gambar Qris'),
 
             ])
             ->filters([
