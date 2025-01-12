@@ -276,12 +276,12 @@
 
     <!-- Pop-Up Modal -->
     <div id="donationModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-20">
-        <div class="bg-gradient-to-br from-white via-gray-50 to-blue-50 w-96 rounded-xl shadow-2xl p-6 relative">
+        <div class="bg-gradient-to-br from-white via-gray-50 to-blue-50 w-96 max-h-[70vh] overflow-y-auto rounded-xl shadow-2xl p-6 relative">
             <!-- Close Button -->
-            <button id="closeButton" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl">&times;</button>
+            <button id="closeButton" class="sticky top-0 bg-white text-gray-500 hover:text-red-500 text-2xl p-2 rounded-full shadow-md z-10">&times;</button>
 
             <!-- Content -->
-            <div class="text-center mt-6">
+            <div class="text-center mt-3">
                 <img src="{{ $donasi->path }}" alt="Donation" class="w-32 h-32 object-cover mx-auto mb-4 rounded-full border-4 border-blue-400 shadow-md">
                 <h2 class="text-2xl font-extrabold text-blue-600 mb-2">
                     Terima kasih telah mendonasikan ke {{ $donasi->judul }}
@@ -289,7 +289,7 @@
                 <p class="text-gray-700 mb-6">{{ $donasi->isi }}</p>
 
                 <!-- Dropdown Metode Pembayaran -->
-                <select id="paymentMethod" class="w-full border border-blue-300 rounded-lg p-2 mb-4 bg-blue-50 text-gray-800">
+                <select id="paymentMethod" onchange="getPaymentMethod(this.value)" class="w-full border border-blue-300 rounded-lg p-2 mb-4 bg-blue-50 text-gray-800">
                     <option value="" class="text-gray-400">Pilih Metode</option>
                     <option value="bank">Transfer ATM</option>
                     <option value="emoney">Pilih e-money</option>
@@ -317,16 +317,19 @@
                         <span id="paymentDetails" class="font-mono text-lg font-semibold text-gray-800"></span>
                         <button type="button" class="ml-2 text-blue-600 hover:text-blue-800" onclick="copyContent()">Copy</button>
                     </div>
+                    <p id="ownerName" class="text-sm text-gray-600 mt-2">A/N: <span class="font-semibold text-gray-800"></span></p>
                 </div>
 
                 <!-- QRIS -->
                 <div id="qrisInfo" class="hidden fade-in mt-6">
                     <p class="text-sm text-gray-600 mb-2">Scan QRIS:</p>
-                    <img src="{{ $donasi->qris_path }}" alt="QRIS" class="w-40 h-40 mx-auto rounded-lg shadow-lg">
+                    <img src="{{ asset('storage/' . $donasi->qris_path) }}" alt="QRIS" class="w-40 h-40 mx-auto rounded-lg shadow-lg">
+
                 </div>
             </div>
         </div>
     </div>
+
 
 
     <!-- Footer -->
@@ -361,21 +364,6 @@
                 </div>
             </div>
 
-            <!-- Ikon Media Sosial -->
-            <div class="flex justify-center space-x-4 mt-4">
-                <a href="#" class="text-gray-100 hover:text-yellow-300 transition">
-                    <i class="fab fa-facebook fa-lg"></i>
-                </a>
-                <a href="#" class="text-gray-100 hover:text-pink-300 transition">
-                    <i class="fab fa-instagram fa-lg"></i>
-                </a>
-                <a href="#" class="text-gray-100 hover:text-blue-300 transition">
-                    <i class="fab fa-twitter fa-lg"></i>
-                </a>
-                <a href="#" class="text-gray-100 hover:text-red-300 transition">
-                    <i class="fab fa-youtube fa-lg"></i>
-                </a>
-            </div>
         </div>
         @endforeach
     </footer>
@@ -459,7 +447,7 @@
         // script countdown ramadhan
 
 
-        const ramadhanStartDate = new Date('2025-03-10T00:00:00'); // Ganti sesuai tanggal awal Ramadhan
+        const ramadhanStartDate = new Date('2025-02-28T00:00:00');
 
         function updateCountdown() {
             const now = new Date();
@@ -526,7 +514,7 @@
             });
 
 
-        // var donasi_id = null
+
 
         // Burger menus
         document.addEventListener('DOMContentLoaded', function() {
@@ -631,16 +619,28 @@
                         if (method === 'bank') {
                             emoneyDropdown.classList.add('hidden');
                             bankDropdown.classList.remove('hidden');
-                            $('#bankListNames').html(
-                                '<option value="" id="pilih_bank">Pilih Bank</option>' +
-                                '<option value="' + data.no_rek_1 + '">' + data.nama_atm_1 + '</option>' +
-                                '<option value="' + data.no_rek_2 + '">' + data.nama_atm_2 + '</option>' +
-                                '<option value="' + data.no_rek_3 + '">' + data.nama_atm_3 + '</option>'
-                            )
+                            let bankOptions = '<option value="" id="pilih_bank">Pilih Bank</option>';
+                            if (data.nama_atm_1 && data.no_rek_1) {
+                                bankOptions += '<option value="' + data.no_rek_1 + '" data-owner="' + data.atas_nama_1 + '">' + data.nama_atm_1 + '</option>';
+                            }
+                            if (data.nama_atm_2 && data.no_rek_2) {
+                                bankOptions += '<option value="' + data.no_rek_2 + '" data-owner="' + data.atas_nama_2 + '">' + data.nama_atm_2 + '</option>';
+                            }
+                            if (data.nama_atm_3 && data.no_rek_3) {
+                                bankOptions += '<option value="' + data.no_rek_3 + '" data-owner="' + data.atas_nama_3 + '">' + data.nama_atm_3 + '</option>';
+                            }
+                            $('#bankListNames').html(bankOptions);
+
 
                             $('#bankListNames').change(() => {
-                                paymentInfo.classList.remove('hidden');
-                                paymentDetails.textContent = $('#bankListNames').find(":selected").val();
+                                const selectedOption = $('#bankListNames').find(":selected");
+                                const selectedValue = selectedOption.val();
+                                const selectedOwner = selectedOption.data('owner');
+                                if (selectedValue) {
+                                    paymentInfo.classList.remove('hidden');
+                                    paymentDetails.textContent = $('#bankListNames').find(":selected").val();
+                                    document.querySelector('#ownerName span').textContent = selectedOwner || '';
+                                }
                             })
                         }
 
@@ -648,36 +648,42 @@
 
                             emoneyDropdown.classList.remove('hidden');
                             bankDropdown.classList.add('hidden');
-                            $('#emoneyListNames').html(
-                                '<option value="" id="pilih_emoney">Pilih emoney</option>' +
-                                '<option value="' + data.nomer_va_1 + '">' + data.emoney_1 + '</option>' +
-                                '<option value="' + data.nomer_va_2 + '">' + data.emoney_2 + '</option>' +
-                                '<option value="' + data.nomer_va_3 + '">' + data.emoney_3 + '</option>'
-                            );
+                            let emoneyOptions = '<option value="" id="pilih_emoney">Pilih emoney</option>';
+                            if (data.emoney_1 && data.nomer_va_1) {
+                                emoneyOptions += '<option value="' + data.nomer_va_1 + '" data-owner="' + data.atas_nama_4 + '">' + data.emoney_1 + '</option>';
+                            }
+                            if (data.emoney_2 && data.nomer_va_2) {
+                                emoneyOptions += '<option value="' + data.nomer_va_2 + '" data-owner="' + data.atas_nama_5 + '">' + data.emoney_2 + '</option>';
+                            }
+                            if (data.emoney_3 && data.nomer_va_3) {
+                                emoneyOptions += '<option value="' + data.nomer_va_3 + '" data-owner="' + data.atas_nama_6 + '">' + data.emoney_3 + '</option>';
+                            }
+                            $('#emoneyListNames').html(emoneyOptions);
 
                             $('#emoneyListNames').change(() => {
-                                paymentInfo.classList.remove('hidden');
-                                paymentDetails.textContent = $('#emoneyListNames').find(":selected").val();
+                                const selectedOption = $('#emoneyListNames').find(":selected");
+                                const selectedValue = selectedOption.val();
+                                const selectedOwner = selectedOption.data('owner');
+                                if (selectedValue) {
+                                    paymentInfo.classList.remove('hidden');
+                                    paymentDetails.textContent = $('#emoneyListNames').find(":selected").val();
+                                    document.querySelector('#ownerName span').textContent = selectedOwner || '';
+                                }
                             })
-
 
                         }
 
                         if (method === 'qris') {
 
+                            bankDropdown.classList.add('hidden');
                             emoneyDropdown.classList.add('hidden');
-                            qrisDropdown.classList.remove('hidden');
                             qrisInfo.classList.remove('hidden');
-                            emoneyDropdown.classList.add('hidden');
-                            $('#qrisListNames').html(
-                                '<option value="" id="pilih_qris">Pilih QRIS</option>' +
-                                '<option value="' + response.qris_path + '">QRIS</option>'
-                            );
+                            document.querySelector('#qrisInfo img').src = response.qris_path;
 
-                            $('#qrisListNames').change(() => {
-                                qrisInfo.classList.remove('hidden');
-                                document.querySelector('#qrisInfo img').src = $('#qrisListNames').find(":selected").val();
-                            });
+                            // $('#qrisListNames').change(() => {
+                            //     qrisInfo.classList.remove('hidden');
+                            //     document.querySelector('#qrisInfo img').src = $('#qrisListNames').find(":selected").val();
+                            // });
 
                         }
                     },
@@ -697,54 +703,10 @@
                 resetPaymentSections();
 
                 const data = getPaymentMethod(method);
-                // if (method === 'bank') {
 
-                //     bankDropdown.classList.remove('hidden');
-                //     $('#bankListNames').html(
-                //         '<option value="" id="pilih_bank">Pilih Bank</option>' +
-                //         '<option value="" id="pilih_bank">Pilih Bank</option>'
-                //     );
-                // } else if (method.startsWith('Emoney')) {
-                //     paymentInfo.classList.remove('hidden');
-                //     const emoneyData = {
-                //         Emoney1: '{{ $donasi->nomer_va_1 }}',
-                //         Emoney2: '{{ $donasi->nomer_va_2 }}',
-                //         Emoney3: '{{ $donasi->nomer_va_3 }}'
-                //     };
-                //     paymentDetails.textContent = emoneyData[method] || 'Data tidak tersedia';
-                // } else if (method === 'qris') {
-                //     qrisInfo.classList.remove('hidden');
-                //     const qrisPath = '{{ $donasi->qris_path }}';
-                //     document.querySelector('#qrisInfo img').src = qrisPath;
-                // }
             });
 
-            // Event listener untuk dropdown nama ATM
-            // bankListNames.addEventListener('change', function() {
-            //     alert('test');
-            //     // Ambil nilai yang dipilih (ATM1, ATM2, atau ATM3)
-            //     const selectedValue = bankListNames.value;
 
-            //     // Cari opsi yang sesuai di bankListAccounts
-            //     const selectedAccountOption = Array.from(bankListAccounts.options).find(option => option.value === selectedValue);
-
-            //     if (selectedAccountOption) {
-            //         // Ambil nomor rekening dari atribut data-rekening
-            //         const rekeningNumber = selectedAccountOption.getAttribute('data-rekening');
-
-            //         // Tampilkan nomor rekening di paymentDetails
-            //         paymentDetails.textContent = rekeningNumber;
-
-            //         // Tampilkan elemen paymentInfo
-            //         paymentInfo.classList.remove('hidden');
-            //     } else {
-            //         // Jika tidak ada yang dipilih, sembunyikan paymentInfo
-            //         paymentInfo.classList.add('hidden');
-            //         paymentDetails.textContent = '';
-            //     }
-            // });
-
-            // Fungsi untuk menyalin konten
             window.copyContent = function() {
                 const textToCopy = paymentDetails.textContent;
                 if (textToCopy) {

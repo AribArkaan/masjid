@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\tentangcontroller;
+use App\Http\Middleware\CorsMiddleware;
 use App\Models\PaymentMethod;
+use Filament\Facades\Filament;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,10 +39,6 @@ Route::get('/', [ContentsController::class, 'index']);
 Route::get('/get-donasi-details/{id}', [ContentsController::class, 'getDonasiDetails']);
 
 Route::get('/select-payment-method', [ContentsController::class, 'getPaymentMethod'])->name('select-payment-method');
-
-// Route::middleware(['auth'])->group(function () {
-//     Route::resource('images', ImageController::class);
-// });
 
 // Route::get('/', function () {
 //     return view('landingpage'); 

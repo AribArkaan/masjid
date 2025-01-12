@@ -30,7 +30,13 @@ class Donasi extends Model
         'nomer_va_2',
         'nomer_va_3',
         'button_text', 
-        'button_url', 
+        'button_url',
+        'atas_nama_1', 
+        'atas_nama_2',
+        'atas_nama_3',
+        'atas_nama_4',
+        'atas_nama_5',
+        'atas_nama_6',
 
     ];
 

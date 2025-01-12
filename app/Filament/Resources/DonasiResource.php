@@ -41,16 +41,22 @@ class DonasiResource extends Resource
                 // New Fields
                 TextInput::make('nama_atm_1')->label('Nama ATM 1')->nullable(),
                 TextInput::make('no_rek_1')->label('No Rek 1')->nullable(),
+                TextInput::make('atas_nama_1')->label('Atas Nama ATM 1')->nullable(),
                 TextInput::make('nama_atm_2')->label('Nama ATM 2')->nullable(),
                 TextInput::make('no_rek_2')->label('No Rek 2')->nullable(),
+                TextInput::make('atas_nama_2')->label('Atas Nama ATM 2')->nullable(),
                 TextInput::make('nama_atm_3')->label('Nama ATM 3')->nullable(),
                 TextInput::make('no_rek_3')->label('No Rek 3')->nullable(),
+                TextInput::make('atas_nama_3')->label('Atas Nama ATM 3')->nullable(),
                 TextInput::make('emoney_1')->label('Emoney 1')->nullable(),
                 TextInput::make('nomer_va_1')->label('Nomer VA 1')->nullable(),
+                TextInput::make('atas_nama_4')->label('Atas Nama emoney 1')->nullable(),
                 TextInput::make('emoney_2')->label('Emoney 2')->nullable(),
                 TextInput::make('nomer_va_2')->label('Nomer VA 2')->nullable(),
+                TextInput::make('atas_nama_5')->label('Atas Nama emoney 2')->nullable(),
                 TextInput::make('emoney_3')->label('Emoney 3')->nullable(),
                 TextInput::make('nomer_va_3')->label('Nomer VA 3')->nullable(),
+                TextInput::make('atas_nama_6')->label('Atas Nama emoney 3')->nullable(),
             ]);
     }
 

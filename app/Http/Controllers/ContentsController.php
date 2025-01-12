@@ -10,7 +10,6 @@ use App\Models\Kontak;
 use App\Models\PaymentMethod;
 use App\Models\Tentang;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ContentsController extends Controller
 {
@@ -24,32 +23,30 @@ class ContentsController extends Controller
 
         $donasis = Donasi::all()->map(function ($donasi) {
             $donasi->path = $donasi->path ? asset('storage/' . $donasi->path) : null;
-            $donasi->qris_path = $donasi->qris_path ? asset('storage/' . $donasi->qris_path) : null;
+            $donasi->qris_path = $donasi->qris_path ? asset($donasi->qris_path) : null;
 
-
-            // Kelompokkan data bank
             $donasi->bank = collect([
-                ['key' => 'ATM1', 'nama' => $donasi->nama_atm_1, 'no_rek' => $donasi->no_rek_1],
-                ['key' => 'ATM2', 'nama' => $donasi->nama_atm_2, 'no_rek' => $donasi->no_rek_2],
-                ['key' => 'ATM3', 'nama' => $donasi->nama_atm_3, 'no_rek' => $donasi->no_rek_3],
+                ['key' => 'ATM1', 'nama' => $donasi->nama_atm_1, 'no_rek' => $donasi->no_rek_1, 'atas_nama' => $donasi->atas_nama_1],
+                ['key' => 'ATM2', 'nama' => $donasi->nama_atm_2, 'no_rek' => $donasi->no_rek_2, 'atas_nama' => $donasi->atas_nama_2],
+                ['key' => 'ATM3', 'nama' => $donasi->nama_atm_3, 'no_rek' => $donasi->no_rek_3, 'atas_nama' => $donasi->atas_nama_3],
             ])->filter(function ($bank) {
                 return !empty($bank['nama']) && !empty($bank['no_rek']);
-            });
+            })->values();
 
-            // Kelompokkan data e-money
             $donasi->emoney = collect([
-                ['key' => 'emoney', 'nama' => $donasi->emoney_1, 'va' => $donasi->nomer_va_1],
-                ['key' => 'emoney', 'nama' => $donasi->emoney_2, 'va' => $donasi->nomer_va_2],
-                ['key' => 'emoney', 'nama' => $donasi->emoney_3, 'va' => $donasi->nomer_va_3],
+                ['key' => 'emoney1', 'nama' => $donasi->emoney_1, 'va' => $donasi->nomer_va_1, 'atas_nama' => $donasi->atas_nama_4],
+                ['key' => 'emoney2', 'nama' => $donasi->emoney_2, 'va' => $donasi->nomer_va_2, 'atas_nama' => $donasi->atas_nama_5],
+                ['key' => 'emoney3', 'nama' => $donasi->emoney_3, 'va' => $donasi->nomer_va_3, 'atas_nama' => $donasi->atas_nama_6],
             ])->filter(function ($emoney) {
                 return !empty($emoney['nama']) && !empty($emoney['va']);
-            });
+            })->values();
+
 
             return $donasi;
         });
 
+      
 
-        // dd($donasis);
         $contents = Content::all();
         $tentangs = Tentang::all();
         $Hero = Hero::all();
@@ -76,8 +73,18 @@ class ContentsController extends Controller
             'nomer_va_2' => 'required',
             'emoney_3' => 'required',
             'nomer_va_3' => 'required',
+            'qris_path' => 'nullable|file|mimes:png,jpg,jpeg|max:2048',
 
         ]);
+
+
+        if ($request->hasFile('qris_path')) {
+            $file = $request->file('qris_path');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path(), $fileName); 
+            $validatedData['qris_path'] = $fileName; 
+        }
+
 
         // Buat entri baru
         Donasi::create($validatedData);
@@ -89,12 +96,15 @@ class ContentsController extends Controller
     {
         $donasi = Donasi::findOrFail($id);
 
-        return response()->json([
+        $filteredData = [
             'bank' => $donasi->bank,
             'emoney' => $donasi->emoney,
-            'qris_path' => $donasi->qris_path,
-        ]);
+            'qris_path' => $donasi->qris_path ? asset($donasi->qris_path) : null,
+        ];
+
+        return response()->json($filteredData);
     }
+
 
     public function getPaymentMethod(Request $request)
     {

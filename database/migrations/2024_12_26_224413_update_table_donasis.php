@@ -32,6 +32,14 @@ class UpdateTableDonasis extends Migration
             $table->string('nomer_va_1')->nullable();
             $table->string('nomer_va_2')->nullable();
             $table->string('nomer_va_3')->nullable();
+
+            // adding column for every number transfer
+            $table->string('atas_nama_1')->nullable();
+            $table->string('atas_nama_2')->nullable();
+            $table->string('atas_nama_3')->nullable();
+            $table->string('atas_nama_4')->nullable();
+            $table->string('atas_nama_5')->nullable();
+            $table->string('atas_nama_6')->nullable();
         });
     }
 
